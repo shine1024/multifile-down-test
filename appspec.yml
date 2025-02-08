@@ -19,6 +19,9 @@ hooks:
     - location: /home/ec2-user/stop.sh
       timeout: 300
       runas: ec2-user
+    - location: /home/ec2-user/clean_old_jar.sh
+      timeout: 300
+      runas: ec2-user
 
   ApplicationStart:
     - location: /home/ec2-user/start.sh
