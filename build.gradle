@@ -49,3 +49,7 @@ tasks.named('asciidoctor') {
 	inputs.dir snippetsDir
 	dependsOn test
 }
+
+bootJar {
+	archiveFileName = "spring-boot-api-server.jar"
+}
