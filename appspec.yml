@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 
 files:
-  - source: spring-boot-test.jar
+  - source: spring-boot-api-server.jar
     destination: /home/ec2-user/spring-boot-test/
     owner: ec2-user
     group: ec2-user
