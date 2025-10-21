@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+</head>
+<body>
+<h1>{{title}}</h1>
+<p>{{message}}</p>
+
+<!-- count 입력 박스 -->
+<label for="countInput">호출 횟수:</label>
+<input type="number" id="countInput" placeholder="예: 10" value="1" />
+
+<button id="callApi">call_API_TEST</button>
+
+<!-- JavaScript 이벤트 -->
+<script>
+    document.getElementById("callApi").addEventListener("click", function () {
+        const count = document.getElementById("countInput").value || 1;
+
+        fetch(`/test-call?count=${count}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+        })
+                .then(res => res.json())
+                .then(data => console.log("응답:", data))
+                .catch(err => console.error("에러:", err));
+    });
+</script>
+</body>
+</html>

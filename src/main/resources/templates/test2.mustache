@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+</head>
+<body>
+<h1>{{title}}</h1>
+<p>{{message}}</p>
+
+<!-- 템플릿 입력창 -->
+<label for="templateInput">Handlebars 템플릿</label><br>
+<textarea id="templateInput" rows="10" cols="80"></textarea>
+<br><br>
+
+<!-- JSON 데이터 입력창 -->
+<label for="jsonInput">JSON 데이터</label><br>
+<textarea id="jsonInput" rows="10" cols="80" placeholder='예: {"title": "공지사항", "content": "내용입니다."}'></textarea>
+<br><br>
+
+<!-- 버튼 -->
+<button onclick="previewHtml()">미리보기</button>
+<button onclick="clearInput()">초기화</button>
+
+<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"></script>
+<script>
+    function previewHtml() {
+        const templateText = document.getElementById("templateInput").value;
+        const jsonText = document.getElementById("jsonInput").value;
+
+        let data;
+        try {
+            data = JSON.parse(jsonText);
+        } catch (e) {
+            alert("JSON 파싱 오류: " + e.message);
+            return;
+        }
+
+        try {
+            const compiled = Handlebars.compile(templateText);
+            const resultHtml = compiled(data);
+            const preview = window.open(
+                    "",
+                    "PreviewWindow",
+                    "width=800,height=600,top=100,left=100,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,status=no"
+            );
+            preview.document.write(resultHtml);
+            preview.document.close();
+        } catch (e) {
+            alert("템플릿 렌더링 오류: " + e.message);
+        }
+    }
+
+    function clearInput() {
+        document.getElementById("templateInput").value = "";
+        document.getElementById("jsonInput").value = "";
+    }
+</script>
+</body>
+</html>

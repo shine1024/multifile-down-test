@@ -32,6 +32,15 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// Google Authenticator (TOTP)
+	implementation 'com.warrenstrange:googleauth:1.5.0'
+
+	// ZXing Core (QR 코드 생성)
+	implementation 'com.google.zxing:core:3.5.3'
+
+	// ZXing JavaSE (이미지 변환 유틸)
+	implementation 'com.google.zxing:javase:3.5.3'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>파일 자동 업로드 → 복호화 다운로드</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+
+        .drop-zone {
+            border: 3px dashed #999;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            color: #666;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .drop-zone.dragover {
+            background-color: #f0f8ff;
+            border-color: #007bff;
+            color: #007bff;
+        }
+
+        #status {
+            margin-top: 15px;
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h2>📂 암호화된 파일 드래그앤드랍 → 복호화 다운로드</h2>
+
+<div id="dropZone" class="drop-zone">
+    여기에 파일을 드래그하거나 클릭해서 선택하세요.
+</div>
+
+<div id="status"></div>
+
+<script>
+    const dropZone = document.getElementById('dropZone');
+    const statusText = document.getElementById('status');
+
+    // === 드래그 이벤트 처리 ===
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const files = Array.from(e.dataTransfer.files);
+        if (files.length > 0) {
+            await uploadAndDownload(files);
+        }
+    });
+
+    // === 클릭으로 파일 선택 ===
+    dropZone.addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.multiple = true;
+        input.onchange = async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                await uploadAndDownload(files);
+            }
+        };
+        input.click();
+    });
+
+    // === 서버 업로드 후 자동 다운로드 ===
+    async function uploadAndDownload(files) {
+        statusText.textContent = '서버로 전송 중...';
+
+        for (const file of files) {
+            const formData = new FormData();
+            formData.append('files', file);
+
+            try {
+                const response = await fetch('/api/decrypt', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    console.error('❌ 서버 오류:', response.status);
+                    continue;
+                }
+
+                // 서버에서 복호화된 파일을 응답
+                const blob = await response.blob();
+                const disposition = response.headers.get('Content-Disposition');
+                let filename = 'decoded_' + file.name;
+
+                if (disposition) {
+                    const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/);
+                    const asciiMatch = disposition.match(/filename="([^"]+)"/);
+                    if (utf8Match) {
+                        filename = decodeURIComponent(utf8Match[1]);
+                    } else if (asciiMatch) {
+                        filename = asciiMatch[1];
+                    }
+                }
+
+                // 자동 다운로드 트리거
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+
+                console.log(`✅ ${filename} 다운로드 완료`);
+            } catch (err) {
+                console.error('⚠️ 오류:', err.message);
+            }
+        }
+
+        statusText.textContent = '✅ 모든 파일 다운로드 완료';
+    }
+</script>
+
+</body>
+</html>

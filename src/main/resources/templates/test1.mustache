@@ -8,8 +8,25 @@
 <body>
 <h1>{{title}}</h1>
 <p>{{message}}</p>
+<p>{{secret}}</p>
+<img src="{{base64Image}}" alt="{{title}}"></img>
 <button id="fileDown">downloadFile__Blob</button>
 <button id="fileDownByResponse">donwloadFile__Response</button>
+
+<h2>OTP 인증 테스트</h2>
+<form action="/test-otp" method="get">
+    <div>
+        <label for="secret">Secret:</label>
+        <input type="text" id="secret" name="secret" required>
+    </div>
+    <div>
+        <label for="otp">OTP 코드:</label>
+        <input type="text" id="otp" name="otp" maxlength="6" required>
+    </div>
+    <div>
+        <button type="submit">OTP 검증</button>
+    </div>
+</form>
 
 <!-- JavaScript 이벤트 -->
 <script>
@@ -25,7 +42,7 @@
         for (let i = 1; i <= fileCount; i++) {
             setTimeout(() => {
                 window.location.href = '/download-file-response?count=' + i;
-            }, i * 200);
+            }, i * 10);
         }
     }
 

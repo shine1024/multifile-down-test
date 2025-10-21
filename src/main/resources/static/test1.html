@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>정적 HTML 테스트</title>
+<link href="https://cdn.jsdelivr.net/npm/jsoneditor@latest/dist/jsoneditor.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/jsoneditor@latest/dist/jsoneditor.min.js"></script>
+</head>
+
+<div id="jsonEditor" style="width: 100%; height: 300px;"></div>
+
+<script>
+  const container = document.getElementById("jsonEditor");
+  const editor = new JSONEditor(container, {
+    mode: "code", // "tree", "view", "form" 등 변경 가능
+  });
+
+  // 초기값 설정
+  editor.set({
+    title: "공지사항",
+    content: "시스템 점검 안내입니다."
+  });
+
+  // 사용자가 편집한 값 가져오기
+  const jsonData = editor.get();
+</script>
+
+<body>
+<h1>Spring Boot 정적 HTML 페이지</h1>
+<p>템플릿 엔진 없이 바로 표시됨</p>
+</body>
+</html>
+
